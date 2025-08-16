@@ -5,6 +5,7 @@ import Signup from "./pages/Signup";
 import MyMenu from "./pages/My-Menu";
 import MyMeals from "./pages/My-Meals";
 import Meal from "./pages/Meal";
+import NewMeal from "./pages/NewMeal";
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/meal/:title" element={<Meal />} />
+        <Route path="/new/meal" element={<NewMeal />} />
       </Routes>
     </Router>
   );

@@ -1,10 +1,13 @@
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import MealItem from "../components/MealItem";
+import SolidBtn from "../components/Buttons";
+import { Link } from "react-router-dom";
 
+let mealId = 1;
 const meals = [
   {
-    id: 1,
+    id: mealId++,
     title: "Spaghetti Bolognese",
     img: "/dinnerPics/bolognese.webp",
     description:
@@ -24,7 +27,7 @@ const meals = [
     ],
   },
   {
-    id: 2,
+    id: mealId++,
     title: "Chicken Stir-Fry",
     img: "/dinnerPics/Chicken-Stir-Fry.webp",
     description: "Quick Asian-style stir-fried chicken with vegetables",
@@ -43,7 +46,7 @@ const meals = [
     ],
   },
   {
-    id: 3,
+    id: mealId++,
     title: "Beef Tacos",
     img: "/dinnerPics/beefTacos.jpg",
     description: "Crispy taco shells filled with seasoned beef and toppings",
@@ -56,7 +59,7 @@ const meals = [
     recipeMethod: null,
   },
   {
-    id: 4,
+    id: mealId++,
     title: "Vegetable Lasagna",
     img: "/dinnerPics/vegLasagna.jpg",
     description: "Layered pasta bake with vegetables and cheese",
@@ -75,7 +78,7 @@ const meals = [
     ],
   },
   {
-    id: 5,
+    id: mealId++,
     title: "BBQ Pulled Pork Sandwich",
     img: "/dinnerPics/pulledPork.jpg",
     description: "Slow-cooked pork with BBQ sauce served in buns",
@@ -94,7 +97,7 @@ const meals = [
     ],
   },
   {
-    id: 6,
+    id: mealId++,
     title: "Margherita Pizza",
     img: "/dinnerPics/pizza.jpg",
     description: "Classic Italian pizza with tomato, mozzarella, and basil",
@@ -107,7 +110,7 @@ const meals = [
     recipeMethod: ["Preheat oven to 250°C.", "Spread passata over pizza dough.", "Top with mozzarella and basil.", "Bake for 7-10 minutes.", "Drizzle with olive oil and serve."],
   },
   {
-    id: 7,
+    id: mealId++,
     title: "Butter Chicken",
     img: "/dinnerPics/butterChicken.jpg",
     description: "Creamy tomato-based Indian chicken curry",
@@ -126,7 +129,7 @@ const meals = [
     ],
   },
   {
-    id: 8,
+    id: mealId++,
     title: "Beef Stroganoff",
     img: "/dinnerPics/beefStroganoff.jpg",
     description: "Creamy beef and mushroom sauce served over pasta",
@@ -152,7 +155,15 @@ export default function MyMeals() {
       <Navbar />
       <div className="container mx-auto px-3">
         <div className="mx-auto my-15 p-3 sm:p-5 md:p-8 rounded bg-gray-500">
-          <h1 className="text-5xl text-white mb-10">My Meals</h1>
+          <div className="flex gap-10 flex-wrap justify-between items-center mb-10">
+            <h1 className="text-5xl text-white">My Meals</h1>
+            <div className="flex gap-2">
+              <Link to={"/new/meal"}>
+                <SolidBtn text={"+ New Meal"} bgcolour={"bg-green-600"} hover={"hover:bg-green-500"} />
+              </Link>
+              <SolidBtn text={"Edit Meals"} bgcolour={"bg-orange-500"} hover={"hover:bg-orange-400"} />
+            </div>
+          </div>
           <div className="flex flex-col gap-5">
             {meals.map((meal) => (
               <MealItem meal={meal} />

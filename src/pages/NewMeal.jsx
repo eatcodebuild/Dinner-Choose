@@ -1,13 +1,10 @@
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import MealPageItem from "../components/MealPageItem";
-import { useLocation } from "react-router-dom";
-import { Link } from "react-router-dom";
 import SolidBtn from "../components/Buttons";
+import { Link } from "react-router-dom";
+import NewMealForm from "../components/Forms";
 
-export default function Meal() {
-  const location = useLocation();
-  const { meal } = location.state;
+export default function NewMeal() {
   return (
     <div className="bg-white">
       <Navbar />
@@ -16,9 +13,10 @@ export default function Meal() {
           <Link to={"/my-meals"}>
             <SolidBtn text={"← Back"} />
           </Link>
-          <SolidBtn text={"Edit Meal"} bgcolour={"bg-orange-500"} hover={"hover:bg-orange-400"} />
         </div>
-        <MealPageItem meal={meal} />
+        <div className="max-w-[900px] mx-auto">
+          <NewMealForm />
+        </div>
       </div>
       <Footer />
     </div>
