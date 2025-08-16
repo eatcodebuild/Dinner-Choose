@@ -10,7 +10,7 @@ export default function MealItem({ meal }) {
   }
 
   return (
-    <div className="p-5 bg-gray-700 gap-5 rounded flex flex-col lg:flex-row text-white lg:h-70">
+    <div className="p-5 bg-gray-700 gap-5 rounded shadow-lg flex flex-col lg:flex-row text-white lg:h-70">
       <div className="w-full h-full lg:flex-[3] xl:flex-[2]">
         <img src={meal.img} alt={meal.title} className="rounded shadow-lg w-full h-full object-cover max-h-[300px]" />
       </div>

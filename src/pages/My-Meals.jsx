@@ -15,13 +15,13 @@ const meals = [
     minsToCook: 60,
     costToMake: 20,
     hasRecipe: true,
-    recipeMethod: {
-      1: "Heat oil in pan and sauté garlic and onion until soft.",
-      2: "Add beef mince and cook until browned.",
-      3: "Stir in diced tomatoes, beef stock, basil, and herbs.",
-      4: "Simmer for 40 minutes, stirring occasionally.",
-      5: "Serve over cooked pasta with parmesan cheese.",
-    },
+    recipeMethod: [
+      "Heat oil in pan and sauté garlic and onion until soft.",
+      "Add beef mince and cook until browned.",
+      "Stir in diced tomatoes, beef stock, basil, and herbs.",
+      "Simmer for 40 minutes, stirring occasionally.",
+      "Serve over cooked pasta with parmesan cheese.",
+    ],
   },
   {
     id: 2,
@@ -34,13 +34,13 @@ const meals = [
     minsToCook: 25,
     costToMake: 18,
     hasRecipe: true,
-    recipeMethod: {
-      1: "Slice chicken and vegetables.",
-      2: "Heat sesame oil in a wok and add garlic and ginger.",
-      3: "Add chicken and cook until no longer pink.",
-      4: "Toss in vegetables and stir-fry until tender-crisp.",
-      5: "Serve with steamed rice.",
-    },
+    recipeMethod: [
+      "Slice chicken and vegetables.",
+      "Heat sesame oil in a wok and add garlic and ginger.",
+      "Add chicken and cook until no longer pink.",
+      "Toss in vegetables and stir-fry until tender-crisp.",
+      "Serve with steamed rice.",
+    ],
   },
   {
     id: 3,
@@ -52,14 +52,8 @@ const meals = [
     tags: ["mexican", "quick", "family"],
     minsToCook: 20,
     costToMake: 15,
-    hasRecipe: true,
-    recipeMethod: {
-      1: "Brown mince in pan.",
-      2: "Add taco seasoning and water, simmer for 5 mins.",
-      3: "Fill taco shells with beef mixture.",
-      4: "Top with lettuce, tomato, cheese, and sour cream.",
-      5: "Serve immediately.",
-    },
+    hasRecipe: false,
+    recipeMethod: null,
   },
   {
     id: 4,
@@ -72,13 +66,13 @@ const meals = [
     minsToCook: 75,
     costToMake: 22,
     hasRecipe: true,
-    recipeMethod: {
-      1: "Roast vegetables until tender.",
-      2: "Layer lasagna sheets, vegetables, ricotta, and passata.",
-      3: "Repeat layers and top with mozzarella.",
-      4: "Bake at 180°C for 45 minutes.",
-      5: "Let rest before serving.",
-    },
+    recipeMethod: [
+      "Roast vegetables until tender.",
+      "Layer lasagna sheets, vegetables, ricotta, and passata.",
+      "Repeat layers and top with mozzarella.",
+      "Bake at 180°C for 45 minutes.",
+      "Let rest before serving.",
+    ],
   },
   {
     id: 5,
@@ -91,13 +85,13 @@ const meals = [
     minsToCook: 480,
     costToMake: 28,
     hasRecipe: true,
-    recipeMethod: {
-      1: "Place pork, onion, and garlic in slow cooker.",
-      2: "Pour over BBQ sauce and cook on low for 8 hours.",
-      3: "Shred pork with forks.",
-      4: "Serve in buns with coleslaw.",
-      5: "Enjoy warm.",
-    },
+    recipeMethod: [
+      "Place pork, onion, and garlic in slow cooker.",
+      "Pour over BBQ sauce and cook on low for 8 hours.",
+      "Shred pork with forks.",
+      "Serve in buns with coleslaw.",
+      "Enjoy warm.",
+    ],
   },
   {
     id: 6,
@@ -110,13 +104,7 @@ const meals = [
     minsToCook: 20,
     costToMake: 12,
     hasRecipe: true,
-    recipeMethod: {
-      1: "Preheat oven to 250°C.",
-      2: "Spread passata over pizza dough.",
-      3: "Top with mozzarella and basil.",
-      4: "Bake for 7-10 minutes.",
-      5: "Drizzle with olive oil and serve.",
-    },
+    recipeMethod: ["Preheat oven to 250°C.", "Spread passata over pizza dough.", "Top with mozzarella and basil.", "Bake for 7-10 minutes.", "Drizzle with olive oil and serve."],
   },
   {
     id: 7,
@@ -129,13 +117,13 @@ const meals = [
     minsToCook: 45,
     costToMake: 25,
     hasRecipe: true,
-    recipeMethod: {
-      1: "Marinate chicken in spices.",
-      2: "Cook chicken in butter until browned.",
-      3: "Add tomato puree and simmer.",
-      4: "Stir in cream and cook for 10 minutes.",
-      5: "Serve with rice.",
-    },
+    recipeMethod: [
+      "Marinate chicken in spices.",
+      "Cook chicken in butter until browned.",
+      "Add tomato puree and simmer.",
+      "Stir in cream and cook for 10 minutes.",
+      "Serve with rice.",
+    ],
   },
   {
     id: 8,
@@ -148,19 +136,19 @@ const meals = [
     minsToCook: 40,
     costToMake: 24,
     hasRecipe: true,
-    recipeMethod: {
-      1: "Sear beef strips and set aside.",
-      2: "Cook onion, garlic, and mushrooms.",
-      3: "Add paprika and sour cream.",
-      4: "Return beef to pan and heat through.",
-      5: "Serve over pasta.",
-    },
+    recipeMethod: [
+      "Sear beef strips and set aside.",
+      "Cook onion, garlic, and mushrooms.",
+      "Add paprika and sour cream.",
+      "Return beef to pan and heat through.",
+      "Serve over pasta.",
+    ],
   },
 ];
 
 export default function MyMeals() {
   return (
-    <>
+    <div className="bg-white">
       <Navbar />
       <div className="container mx-auto px-3">
         <div className="mx-auto my-15 p-3 sm:p-5 md:p-8 rounded bg-gray-500">
@@ -173,6 +161,6 @@ export default function MyMeals() {
         </div>
       </div>
       <Footer />
-    </>
+    </div>
   );
 }
