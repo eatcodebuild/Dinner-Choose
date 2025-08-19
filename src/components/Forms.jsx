@@ -204,16 +204,16 @@ export default function NewMealForm() {
       cost: Yup.number()
         .transform((value, originalValue) => (originalValue === "" ? undefined : value))
         .typeError("Cost must be a number")
-        .required("Cost of meal required"),
+        .required("Cost required"),
       serves: Yup.number()
         .transform((value, originalValue) => (originalValue === "" ? undefined : value))
         .typeError("Number of serves must be a number")
-        .required("Number of serves required"),
+        .required("Servings required"),
       tags: Yup.array()
         .of(Yup.string())
         .test("hasTags", "Tags required", (arr) => arr?.some((i) => i.trim() !== "")),
-      hasRecipe: Yup.boolean()
-        .transform((value, originalValue) => (originalValue === "" ? undefined : value))
+      hasRecipe: Yup.string()
+        .transform((value, originalValue) => (originalValue === "Please Select" || originalValue === "" ? undefined : value))
         .required("Answer required"),
       steps: Yup.array().of(Yup.string().trim()),
     });
@@ -242,7 +242,7 @@ export default function NewMealForm() {
 
   // saveNewMeal();
 
-  window.addEventListener("change", () => console.log(formData));
+  // window.addEventListener("change", () => console.log(formData));
 
   return (
     <div className="bg-gray-800 text-white p-5 rounded">
@@ -259,79 +259,79 @@ export default function NewMealForm() {
           inputClass={errors.name ? "ring ring-2 ring-red-400 focus:ring-violet-400" : ""}
         />
         <InputUploadGroupWithIcon
-          label={errors.name ? `Upload a Picture (${errors.img})` : "Upload a Picture"}
+          label={errors.img ? `Upload a Picture (${errors.img})` : "Upload a Picture"}
           width={"lg:col-span-4 col-span-12"}
           onInput={(e) => setFormData((prev) => ({ ...prev, img: e.target.files[0] }))}
           value={formData.img}
-          labelClass={errors.name ? "text-red-400" : ""}
-          className={errors.name ? "ring ring-2 ring-red-400 focus:ring-violet-400" : ""}
+          labelClass={errors.img ? "text-red-400" : ""}
+          className={errors.img ? "ring ring-2 ring-red-400 focus:ring-violet-400" : ""}
         />
         <TextAreaGroup
           value={formData.description}
           onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
-          label={errors.name ? `Meal Description (${errors.description})` : "Meal Description"}
+          label={errors.description ? `Meal Description (${errors.description})` : "Meal Description"}
           id={"description"}
           width={"col-span-12"}
           placeholder={"Pasta dish with beef mince tomato sauce"}
           rows={5}
-          labelClass={errors.name ? "text-red-400" : ""}
-          textAreaClass={errors.name ? "ring ring-2 ring-red-400 focus:ring-violet-400" : ""}
+          labelClass={errors.description ? "text-red-400" : ""}
+          textAreaClass={errors.description ? "ring ring-2 ring-red-400 focus:ring-violet-400" : ""}
         />
         <InputGroup
           value={formData.ingredients}
           onChange={(e) => setFormData((prev) => ({ ...prev, ingredients: e.target.value.split(/[,;| ]+/).map((ingedient) => ingedient.trim()) }))}
-          label={errors.name ? `Ingredients (${errors.ingredients})` : "Ingredients"}
+          label={errors.ingredients ? `Ingredients (${errors.ingredients})` : "Ingredients"}
           id={"ingredients"}
           width={"lg:col-span-6 col-span-12"}
           placeholder={"Pasta, Onion, Garlic, Sauce, Beef Stock, Beef Mince"}
-          className={errors.name ? "text-red-400" : ""}
-          inputClass={errors.name ? "ring ring-2 ring-red-400 focus:ring-violet-400" : ""}
+          className={errors.ingredients ? "text-red-400" : ""}
+          inputClass={errors.ingredients ? "ring ring-2 ring-red-400 focus:ring-violet-400" : ""}
         />
         <InputGroup
           value={formData.time}
           onChange={(e) => setFormData((prev) => ({ ...prev, time: Number(e.target.value) }))}
-          label={errors.name ? `(${errors.time})` : "Time to Cook (Mins)"}
+          label={errors.time ? `(${errors.time})` : "Time to Cook (Mins)"}
           id={"time"}
           width={"lg:col-span-3 col-span-6"}
           placeholder={"60"}
-          className={errors.name ? "text-red-400" : ""}
-          inputClass={errors.name ? "ring ring-2 ring-red-400 focus:ring-violet-400" : ""}
+          className={errors.time ? "text-red-400" : ""}
+          inputClass={errors.time ? "ring ring-2 ring-red-400 focus:ring-violet-400" : ""}
         />
         <InputGroup
           value={formData.cost}
           onChange={(e) => setFormData((prev) => ({ ...prev, cost: Number(e.target.value) }))}
-          label={"Meal Cost ($)"}
+          label={errors.cost ? `(${errors.cost})` : "Meal Cost ($)"}
           id={"cost"}
           width={"lg:col-span-3 col-span-6"}
           placeholder={"20"}
-          className={errors.name ? "text-red-400" : ""}
-          inputClass={errors.name ? "ring ring-2 ring-red-400 focus:ring-violet-400" : ""}
+          className={errors.cost ? "text-red-400" : ""}
+          inputClass={errors.cost ? "ring ring-2 ring-red-400 focus:ring-violet-400" : ""}
         />
         <InputGroup
-          label={"Servings"}
+          label={errors.serves ? `(${errors.serves})` : "Servings"}
           id={"serves"}
           value={formData.serves}
           onChange={(e) => setFormData((prev) => ({ ...prev, serves: Number(e.target.value) }))}
           width={"lg:col-span-3 col-span-6"}
           placeholder={"4"}
-          className={errors.name ? "text-red-400" : ""}
-          inputClass={errors.name ? "ring ring-2 ring-red-400 focus:ring-violet-400" : ""}
+          className={errors.serves ? "text-red-400" : ""}
+          inputClass={errors.serves ? "ring ring-2 ring-red-400 focus:ring-violet-400" : ""}
         />
         <InputGroup
-          label={"Tags (For Filtering)"}
+          label={errors.tags ? `Tags (For Filtering) (${errors.tags})` : "Tags (For Filtering)"}
           value={formData.tags}
           onChange={(e) => setFormData((prev) => ({ ...prev, tags: e.target.value.split(/[,;| ]+/).map((tag) => tag.trim()) }))}
           id={"tags"}
           width={"lg:col-span-6 col-span-12"}
           placeholder={"Saucy, Pasta, Italian, Meat"}
-          className={errors.name ? "text-red-400" : ""}
-          inputClass={errors.name ? "ring ring-2 ring-red-400 focus:ring-violet-400" : ""}
+          className={errors.tags ? "text-red-400" : ""}
+          inputClass={errors.tags ? "ring ring-2 ring-red-400 focus:ring-violet-400" : ""}
         />
         <div className="col-span-3">
-          <p className={`mb-2 ${errors.name ? "text-red-400" : ""}`}>Recipe</p>
+          <p className={`mb-2 ${errors.hasRecipe ? "text-red-400" : ""}`}>{errors.hasRecipe ? `Recipe (${errors.hasRecipe})` : "Recipe"}</p>
           <select
             className={`rounded p-[9px] bg-white placeholder:text-gray-400 errors.name ? ${
-              errors.name ? "ring ring-2 ring-red-400 focus:ring-violet-400" : ""
+              errors.hasRecipe ? "ring ring-2 ring-red-400 focus:ring-violet-400" : ""
             } focus:outline-none transition w-full text-gray-900`}
             value={formData.hasRecipe}
             onChange={(e) => {
