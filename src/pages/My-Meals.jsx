@@ -159,9 +159,9 @@ export default function MyMeals() {
             <h1 className="text-5xl text-white">My Meals</h1>
             <div className="flex gap-2">
               <Link to={"/new/meal"}>
-                <SolidBtn text={"+ New Meal"} bgcolour={"bg-green-600"} hover={"hover:bg-green-500"} />
+                <SolidBtn text={"+ New Meal"} bgcolour={"bg-transparent"} className={"border hover:border-transparent"} />
               </Link>
-              <SolidBtn text={"Edit Meals"} bgcolour={"bg-orange-500"} hover={"hover:bg-orange-400"} />
+              <SolidBtn text={"Edit Meals"} bgcolour={"bg-transparent"} className={"border hover:border-transparent"} />
             </div>
           </div>
           <div className="flex flex-col gap-5">

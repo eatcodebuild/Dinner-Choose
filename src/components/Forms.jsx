@@ -1,6 +1,7 @@
 import { InputGroup, InputUploadGroupWithIcon, InputUploadGroup, TextAreaGroup } from "./Inputs";
 import SolidBtn from "./Buttons";
 import { useState } from "react";
+import * as Yup from "yup";
 
 let mealId = 1;
 const meals = [
@@ -150,8 +151,10 @@ const meals = [
 //----------------------- FINISH COST, TIME AND UPLOAD -----------------------
 
 export default function NewMealForm() {
+  const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
     name: "",
+    img: "",
     description: "",
     ingredients: [""],
     time: "",
@@ -186,7 +189,59 @@ export default function NewMealForm() {
     });
   }
 
-  // function saveNewMeal(newMeal) {}
+  async function checkData(formData) {
+    const formSchema = Yup.object().shape({
+      name: Yup.string().required("Name required"),
+      img: Yup.string().required("Image required"),
+      description: Yup.string().required("Description required"),
+      ingredients: Yup.array()
+        .of(Yup.string())
+        .test("hasIngredient", "Ingredients required", (arr) => arr?.some((i) => i.trim() !== "")),
+      time: Yup.number()
+        .transform((value, originalValue) => (originalValue === "" ? undefined : value))
+        .typeError("Meal preparation time must be a number in minutes")
+        .required("Time (mins) required"),
+      cost: Yup.number()
+        .transform((value, originalValue) => (originalValue === "" ? undefined : value))
+        .typeError("Cost must be a number")
+        .required("Cost of meal required"),
+      serves: Yup.number()
+        .transform((value, originalValue) => (originalValue === "" ? undefined : value))
+        .typeError("Number of serves must be a number")
+        .required("Number of serves required"),
+      tags: Yup.array()
+        .of(Yup.string())
+        .test("hasTags", "Tags required", (arr) => arr?.some((i) => i.trim() !== "")),
+      hasRecipe: Yup.boolean()
+        .transform((value, originalValue) => (originalValue === "" ? undefined : value))
+        .required("Answer required"),
+      steps: Yup.array().of(Yup.string().trim()),
+    });
+
+    try {
+      await formSchema.validate(formData, { abortEarly: false });
+      return { valid: true, errors: [] };
+    } catch (err) {
+      const errors = {};
+      err.inner.forEach((e) => {
+        if (!errors[e.path]) errors[e.path] = e.message;
+      });
+      return { valid: false, errors };
+    }
+  }
+
+  async function saveNewMeal() {
+    const formCheck = await checkData(formData);
+    if (!formCheck.valid) {
+      console.log(formCheck.errors);
+      setErrors(formCheck.errors);
+    } else {
+      setErrors({});
+    }
+  }
+
+  // saveNewMeal();
+
   window.addEventListener("change", () => console.log(formData));
 
   return (
@@ -195,39 +250,72 @@ export default function NewMealForm() {
       <div className="grid grid-cols-12 gap-4">
         <InputGroup
           value={formData.name}
-          label={"Meal Name"}
+          label={errors.name ? `Meal Name (${errors.name})` : "Meal Name"}
           onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
           width={"lg:col-span-8 col-span-12"}
           id={"name"}
           placeholder={"Spaghetti Blognese"}
+          className={errors.name ? "text-red-400" : ""}
+          inputClass={errors.name ? "ring ring-2 ring-red-400 focus:ring-violet-400" : ""}
         />
-        <InputUploadGroupWithIcon label={"Upload a Picture"} width={"lg:col-span-4 col-span-12"} />
+        <InputUploadGroupWithIcon
+          label={errors.name ? `Upload a Picture (${errors.img})` : "Upload a Picture"}
+          width={"lg:col-span-4 col-span-12"}
+          onInput={(e) => setFormData((prev) => ({ ...prev, img: e.target.files[0] }))}
+          value={formData.img}
+          labelClass={errors.name ? "text-red-400" : ""}
+          className={errors.name ? "ring ring-2 ring-red-400 focus:ring-violet-400" : ""}
+        />
         <TextAreaGroup
           value={formData.description}
           onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
-          label={"Meal Description"}
+          label={errors.name ? `Meal Description (${errors.description})` : "Meal Description"}
           id={"description"}
           width={"col-span-12"}
           placeholder={"Pasta dish with beef mince tomato sauce"}
           rows={5}
+          labelClass={errors.name ? "text-red-400" : ""}
+          textAreaClass={errors.name ? "ring ring-2 ring-red-400 focus:ring-violet-400" : ""}
         />
         <InputGroup
           value={formData.ingredients}
           onChange={(e) => setFormData((prev) => ({ ...prev, ingredients: e.target.value.split(/[,;| ]+/).map((ingedient) => ingedient.trim()) }))}
-          label={"Ingredients"}
+          label={errors.name ? `Ingredients (${errors.ingredients})` : "Ingredients"}
           id={"ingredients"}
           width={"lg:col-span-6 col-span-12"}
           placeholder={"Pasta, Onion, Garlic, Sauce, Beef Stock, Beef Mince"}
+          className={errors.name ? "text-red-400" : ""}
+          inputClass={errors.name ? "ring ring-2 ring-red-400 focus:ring-violet-400" : ""}
         />
-        <InputGroup value={formData.time} label={"Time to Cook (Mins)"} id={"time"} width={"lg:col-span-3 col-span-6"} placeholder={"60"} />
-        <InputGroup value={formData.cost} label={"Meal Cost ($)"} id={"cost"} width={"lg:col-span-3 col-span-6"} placeholder={"20"} />
+        <InputGroup
+          value={formData.time}
+          onChange={(e) => setFormData((prev) => ({ ...prev, time: Number(e.target.value) }))}
+          label={errors.name ? `(${errors.time})` : "Time to Cook (Mins)"}
+          id={"time"}
+          width={"lg:col-span-3 col-span-6"}
+          placeholder={"60"}
+          className={errors.name ? "text-red-400" : ""}
+          inputClass={errors.name ? "ring ring-2 ring-red-400 focus:ring-violet-400" : ""}
+        />
+        <InputGroup
+          value={formData.cost}
+          onChange={(e) => setFormData((prev) => ({ ...prev, cost: Number(e.target.value) }))}
+          label={"Meal Cost ($)"}
+          id={"cost"}
+          width={"lg:col-span-3 col-span-6"}
+          placeholder={"20"}
+          className={errors.name ? "text-red-400" : ""}
+          inputClass={errors.name ? "ring ring-2 ring-red-400 focus:ring-violet-400" : ""}
+        />
         <InputGroup
           label={"Servings"}
           id={"serves"}
           value={formData.serves}
-          onChange={(e) => setFormData((prev) => ({ ...prev, serves: e.target.value }))}
+          onChange={(e) => setFormData((prev) => ({ ...prev, serves: Number(e.target.value) }))}
           width={"lg:col-span-3 col-span-6"}
           placeholder={"4"}
+          className={errors.name ? "text-red-400" : ""}
+          inputClass={errors.name ? "ring ring-2 ring-red-400 focus:ring-violet-400" : ""}
         />
         <InputGroup
           label={"Tags (For Filtering)"}
@@ -236,11 +324,15 @@ export default function NewMealForm() {
           id={"tags"}
           width={"lg:col-span-6 col-span-12"}
           placeholder={"Saucy, Pasta, Italian, Meat"}
+          className={errors.name ? "text-red-400" : ""}
+          inputClass={errors.name ? "ring ring-2 ring-red-400 focus:ring-violet-400" : ""}
         />
         <div className="col-span-3">
-          <p className="mb-2">Recipe</p>
+          <p className={`mb-2 ${errors.name ? "text-red-400" : ""}`}>Recipe</p>
           <select
-            className="rounded p-[9px] bg-white placeholder:text-gray-400 focus:ring-2 focus:ring-violet-400 focus:outline-none transition w-full text-gray-900"
+            className={`rounded p-[9px] bg-white placeholder:text-gray-400 errors.name ? ${
+              errors.name ? "ring ring-2 ring-red-400 focus:ring-violet-400" : ""
+            } focus:outline-none transition w-full text-gray-900`}
             value={formData.hasRecipe}
             onChange={(e) => {
               setFormData((prevData) => ({ ...prevData, hasRecipe: e.target.value }));
