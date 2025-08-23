@@ -46,8 +46,8 @@ export default function MealPageItem({ meal }) {
             <div className="mt-10">
               <h3 className="text-3xl underline mb-3">Recipe:</h3>
               <ul id="recipeMethod">
-                {meal.recipeMethod.map((step) => (
-                  <li>
+                {meal.steps.map((step, i) => (
+                  <li key={i}>
                     <span className="text-lg font-semibold">{`${method++}) `}</span>
                     {step}
                   </li>

@@ -1,164 +1,20 @@
 import { InputGroup, InputUploadGroupWithIcon, InputUploadGroup, TextAreaGroup } from "./Inputs";
 import SolidBtn from "./Buttons";
-import { useState } from "react";
 import * as Yup from "yup";
-
-let mealId = 1;
-const meals = [
-  {
-    id: mealId++,
-    title: "Spaghetti Bolognese",
-    img: "/dinnerPics/bolognese.webp",
-    description:
-      "Pasta dish with beef mince tomato saucePasta dish with beef mince tomatoPasta dish with beef mince tomato saucePasta dish with beef mince tomatoPasta dish with beef mince tomato saucePasta dish with beef mince tomatoPasta dish with beef mince tomato saucePasta dish with beef mince tomatoPasta dish with beef mince tomato saucePasta dish with beef mince tomatoPasta dish with beef mince tomato saucePasta dish with beef mince tomatoPasta dish with beef mince tomato saucePasta dish with beef mince tomatoPasta dish with beef mince tomato saucePasta dish with beef mince tomatoPasta dish with beef mince tomato saucePasta dish with beef mince tomatoPasta dish with beef mince tomato saucePasta dish with beef mince tomatoPasta dish with beef mince tomato saucePasta dish with beef mince tomatoPasta dish with beef mince tomato saucePasta dish with beef mince tomato saucePasta dish with beef mince tomato saucePasta dish with beef mince tomato saucePasta dish with beef mince tomato sauce",
-    ingredients: ["beef mince", "garlic", "onion", "pasta", "diced tomatoes", "beef stock", "fresh basil", "herbs", "parmesan cheese"],
-    serves: 4,
-    tags: ["pasta", "meat", "saucy", "cheap", "pasta", "meat", "saucy", "cheap", "pasta", "meat", "saucy", "cheap", "pasta", "meat", "saucy", "cheap"],
-    minsToCook: 60,
-    costToMake: 20,
-    hasRecipe: true,
-    recipeMethod: [
-      "Heat oil in pan and sauté garlic and onion until soft.",
-      "Add beef mince and cook until browned.",
-      "Stir in diced tomatoes, beef stock, basil, and herbs.",
-      "Simmer for 40 minutes, stirring occasionally.",
-      "Serve over cooked pasta with parmesan cheese.",
-    ],
-  },
-  {
-    id: mealId++,
-    title: "Chicken Stir-Fry",
-    img: "/dinnerPics/Chicken-Stir-Fry.webp",
-    description: "Quick Asian-style stir-fried chicken with vegetables",
-    ingredients: ["chicken breast", "soy sauce", "garlic", "ginger", "capsicum", "broccoli", "carrot", "sesame oil", "rice"],
-    serves: 4,
-    tags: ["asian", "quick", "healthy"],
-    minsToCook: 25,
-    costToMake: 18,
-    hasRecipe: true,
-    recipeMethod: [
-      "Slice chicken and vegetables.",
-      "Heat sesame oil in a wok and add garlic and ginger.",
-      "Add chicken and cook until no longer pink.",
-      "Toss in vegetables and stir-fry until tender-crisp.",
-      "Serve with steamed rice.",
-    ],
-  },
-  {
-    id: mealId++,
-    title: "Beef Tacos",
-    img: "/dinnerPics/beefTacos.jpg",
-    description: "Crispy taco shells filled with seasoned beef and toppings",
-    ingredients: ["beef mince", "taco seasoning", "lettuce", "tomato", "cheddar cheese", "sour cream", "taco shells"],
-    serves: 4,
-    tags: ["mexican", "quick", "family"],
-    minsToCook: 20,
-    costToMake: 15,
-    hasRecipe: false,
-    recipeMethod: null,
-  },
-  {
-    id: mealId++,
-    title: "Vegetable Lasagna",
-    img: "/dinnerPics/vegLasagna.jpg",
-    description: "Layered pasta bake with vegetables and cheese",
-    ingredients: ["lasagna sheets", "zucchini", "eggplant", "capsicum", "ricotta", "spinach", "tomato passata", "mozzarella"],
-    serves: 4,
-    tags: ["vegetarian", "baked", "comfort"],
-    minsToCook: 75,
-    costToMake: 22,
-    hasRecipe: true,
-    recipeMethod: [
-      "Roast vegetables until tender.",
-      "Layer lasagna sheets, vegetables, ricotta, and passata.",
-      "Repeat layers and top with mozzarella.",
-      "Bake at 180°C for 45 minutes.",
-      "Let rest before serving.",
-    ],
-  },
-  {
-    id: mealId++,
-    title: "BBQ Pulled Pork Sandwich",
-    img: "/dinnerPics/pulledPork.jpg",
-    description: "Slow-cooked pork with BBQ sauce served in buns",
-    ingredients: ["pork shoulder", "BBQ sauce", "onion", "garlic", "burger buns", "coleslaw"],
-    serves: 4,
-    tags: ["american", "slow-cook", "meat"],
-    minsToCook: 480,
-    costToMake: 28,
-    hasRecipe: true,
-    recipeMethod: [
-      "Place pork, onion, and garlic in slow cooker.",
-      "Pour over BBQ sauce and cook on low for 8 hours.",
-      "Shred pork with forks.",
-      "Serve in buns with coleslaw.",
-      "Enjoy warm.",
-    ],
-  },
-  {
-    id: mealId++,
-    title: "Margherita Pizza",
-    img: "/dinnerPics/pizza.jpg",
-    description: "Classic Italian pizza with tomato, mozzarella, and basil",
-    ingredients: ["pizza dough", "tomato passata", "mozzarella", "fresh basil", "olive oil"],
-    serves: 4,
-    tags: ["italian", "vegetarian", "baked"],
-    minsToCook: 20,
-    costToMake: 12,
-    hasRecipe: true,
-    recipeMethod: ["Preheat oven to 250°C.", "Spread passata over pizza dough.", "Top with mozzarella and basil.", "Bake for 7-10 minutes.", "Drizzle with olive oil and serve."],
-  },
-  {
-    id: mealId++,
-    title: "Butter Chicken",
-    img: "/dinnerPics/butterChicken.jpg",
-    description: "Creamy tomato-based Indian chicken curry",
-    ingredients: ["chicken thigh", "butter", "cream", "garlic", "ginger", "garam masala", "tomato puree", "rice"],
-    serves: 4,
-    tags: ["indian", "curry", "creamy"],
-    minsToCook: 45,
-    costToMake: 25,
-    hasRecipe: true,
-    recipeMethod: [
-      "Marinate chicken in spices.",
-      "Cook chicken in butter until browned.",
-      "Add tomato puree and simmer.",
-      "Stir in cream and cook for 10 minutes.",
-      "Serve with rice.",
-    ],
-  },
-  {
-    id: mealId++,
-    title: "Beef Stroganoff",
-    img: "/dinnerPics/beefStroganoff.jpg",
-    description: "Creamy beef and mushroom sauce served over pasta",
-    ingredients: ["beef strips", "mushrooms", "onion", "garlic", "sour cream", "paprika", "pasta"],
-    serves: 4,
-    tags: ["creamy", "meat", "comfort"],
-    minsToCook: 40,
-    costToMake: 24,
-    hasRecipe: true,
-    recipeMethod: [
-      "Sear beef strips and set aside.",
-      "Cook onion, garlic, and mushrooms.",
-      "Add paprika and sour cream.",
-      "Return beef to pan and heat through.",
-      "Serve over pasta.",
-    ],
-  },
-];
+import { useState } from "react";
 
 //----------------------- FINISH COST, TIME AND UPLOAD -----------------------
 
 export default function NewMealForm() {
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
-    name: "",
-    img: "",
+    id: Date.now(),
+    title: "",
+    img: "", // Need to change to {}
     description: "",
     ingredients: [""],
-    time: "",
-    cost: "",
+    minsToCook: "",
+    costToMake: "",
     serves: "",
     tags: [""],
     hasRecipe: "",
@@ -191,17 +47,17 @@ export default function NewMealForm() {
 
   async function checkData(formData) {
     const formSchema = Yup.object().shape({
-      name: Yup.string().required("Name required"),
+      title: Yup.string().required("Name required"),
       img: Yup.string().required("Image required"),
       description: Yup.string().required("Description required"),
       ingredients: Yup.array()
         .of(Yup.string())
         .test("hasIngredient", "Ingredients required", (arr) => arr?.some((i) => i.trim() !== "")),
-      time: Yup.number()
+      minsToCook: Yup.number()
         .transform((value, originalValue) => (originalValue === "" ? undefined : value))
         .typeError("Meal preparation time must be a number in minutes")
         .required("Time (mins) required"),
-      cost: Yup.number()
+      costToMake: Yup.number()
         .transform((value, originalValue) => (originalValue === "" ? undefined : value))
         .typeError("Cost must be a number")
         .required("Cost required"),
@@ -231,32 +87,49 @@ export default function NewMealForm() {
   }
 
   async function saveNewMeal() {
+    console.log("Form data:", formData);
     const formCheck = await checkData(formData);
     if (!formCheck.valid) {
       console.log(formCheck.errors);
       setErrors(formCheck.errors);
+      return console.log("fill in form");
     } else {
       setErrors({});
+      try {
+        const response = await fetch("http://localhost:3000/meals/new-meal", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json", // Need to remove the headers when replacing with FormData()
+          },
+          body: JSON.stringify(formData), // Need to use FormData() built in API instead to send image files
+        });
+
+        if (!response.ok) {
+          throw new Error("Error adding meal!");
+        }
+
+        const data = await response.json();
+
+        console.log(data);
+      } catch (error) {
+        console.error("Error:", error);
+      }
     }
   }
-
-  // saveNewMeal();
-
-  // window.addEventListener("change", () => console.log(formData));
 
   return (
     <div className="bg-gray-800 text-white p-5 rounded">
       <h1 className="text-4xl text-white mb-5">Create New Meal</h1>
       <div className="grid grid-cols-12 gap-4">
         <InputGroup
-          value={formData.name}
-          label={errors.name ? `Meal Name (${errors.name})` : "Meal Name"}
-          onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
+          value={formData.title}
+          label={errors.title ? `Meal Name (${errors.title})` : "Meal Name"}
+          onChange={(e) => setFormData((prev) => ({ ...prev, title: e.target.value }))}
           width={"lg:col-span-8 col-span-12"}
-          id={"name"}
+          id={"title"}
           placeholder={"Spaghetti Blognese"}
-          className={errors.name ? "text-red-400" : ""}
-          inputClass={errors.name ? "ring ring-2 ring-red-400 focus:ring-violet-400" : ""}
+          classtitle={errors.title ? "text-red-400" : ""}
+          inputClass={errors.title ? "ring ring-2 ring-red-400 focus:ring-violet-400" : ""}
         />
         <InputUploadGroupWithIcon
           label={errors.img ? `Upload a Picture (${errors.img})` : "Upload a Picture"}
@@ -288,24 +161,24 @@ export default function NewMealForm() {
           inputClass={errors.ingredients ? "ring ring-2 ring-red-400 focus:ring-violet-400" : ""}
         />
         <InputGroup
-          value={formData.time}
-          onChange={(e) => setFormData((prev) => ({ ...prev, time: Number(e.target.value) }))}
-          label={errors.time ? `(${errors.time})` : "Time to Cook (Mins)"}
+          value={formData.minsToCook}
+          onChange={(e) => setFormData((prev) => ({ ...prev, minsToCook: Number(e.target.value) }))}
+          label={errors.minsToCook ? `(${errors.minsToCook})` : "Time to Cook (Mins)"}
           id={"time"}
           width={"lg:col-span-3 col-span-6"}
           placeholder={"60"}
-          className={errors.time ? "text-red-400" : ""}
-          inputClass={errors.time ? "ring ring-2 ring-red-400 focus:ring-violet-400" : ""}
+          className={errors.minsToCook ? "text-red-400" : ""}
+          inputClass={errors.minsToCook ? "ring ring-2 ring-red-400 focus:ring-violet-400" : ""}
         />
         <InputGroup
-          value={formData.cost}
-          onChange={(e) => setFormData((prev) => ({ ...prev, cost: Number(e.target.value) }))}
-          label={errors.cost ? `(${errors.cost})` : "Meal Cost ($)"}
+          value={formData.costToMake}
+          onChange={(e) => setFormData((prev) => ({ ...prev, costToMake: Number(e.target.value) }))}
+          label={errors.costToMake ? `(${errors.costToMake})` : "Meal Cost ($)"}
           id={"cost"}
           width={"lg:col-span-3 col-span-6"}
           placeholder={"20"}
-          className={errors.cost ? "text-red-400" : ""}
-          inputClass={errors.cost ? "ring ring-2 ring-red-400 focus:ring-violet-400" : ""}
+          className={errors.costToMake ? "text-red-400" : ""}
+          inputClass={errors.costToMake ? "ring ring-2 ring-red-400 focus:ring-violet-400" : ""}
         />
         <InputGroup
           label={errors.serves ? `(${errors.serves})` : "Servings"}
@@ -330,7 +203,7 @@ export default function NewMealForm() {
         <div className="col-span-3">
           <p className={`mb-2 ${errors.hasRecipe ? "text-red-400" : ""}`}>{errors.hasRecipe ? `Recipe (${errors.hasRecipe})` : "Recipe"}</p>
           <select
-            className={`rounded p-[9px] bg-white placeholder:text-gray-400 errors.name ? ${
+            className={`rounded p-[9px] bg-white placeholder:text-gray-400 ${
               errors.hasRecipe ? "ring ring-2 ring-red-400 focus:ring-violet-400" : ""
             } focus:outline-none transition w-full text-gray-900`}
             value={formData.hasRecipe}
@@ -360,7 +233,7 @@ export default function NewMealForm() {
           </div>
         )}
         <div className="w-full w-max mt-5">
-          <SolidBtn text={"Save New Meal"} />
+          <SolidBtn onClick={saveNewMeal} text={"Save New Meal"} />
         </div>
       </div>
     </div>

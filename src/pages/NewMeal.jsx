@@ -6,7 +6,7 @@ import NewMealForm from "../components/Forms";
 
 export default function NewMeal() {
   return (
-    <div className="bg-white">
+    <>
       <Navbar />
       <div className="container mx-auto px-4 py-15">
         <div className="flex justify-between mb-5">
@@ -19,6 +19,6 @@ export default function NewMeal() {
         </div>
       </div>
       <Footer />
-    </div>
+    </>
   );
 }
