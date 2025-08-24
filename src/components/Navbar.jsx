@@ -18,6 +18,15 @@ export default function Navbar() {
           {/* Desktop Links */}
           <div className="hidden md:flex space-x-4">
             <div className="flex space-x-1">
+              <button
+                className="cursor-pointer"
+                onClick={() => {
+                  const body = document.getElementsByTagName("body")[0];
+                  body.classList.toggle("bg-gray-900");
+                }}
+              >
+                🌓
+              </button>
               <Link to="/my-menu" className="hover:bg-violet-500 px-3 py-2 rounded transition duration-300">
                 My Menu
               </Link>

@@ -53,9 +53,7 @@ export default function MealItem({ meal }) {
       </div>
       <div className="lg:flex-[2] xl:flex-[1] w-full lg:border-l lg:block lg:flex hidden items-start justify-between gap-5 lg:ps-3">
         <ul id="tagList" className="w-full overflow-y-scroll max-h-full">
-          {meal.tags.map((tag, i) => (
-            <li key={i}>{tag}</li>
-          ))}
+          {Array.isArray(meal.tags) ? meal.tags.map((tag, i) => <li key={i}>{tag}</li>) : <li>{meal.tags}</li>}
         </ul>
       </div>
     </div>

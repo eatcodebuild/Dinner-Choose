@@ -1,6 +1,8 @@
 import express from "express";
 import cors from "cors";
+import multer from "multer";
 
+const upload = multer({ storage: multer.memoryStorage() });
 const app = express();
 
 app.use(express.json());
@@ -148,17 +150,36 @@ app.get("/meals", (req, res) => {
   }
 });
 
-app.post("/meals/new-meal", (req, res) => {
+app.post("/meals/new-meal", upload.single("img"), (req, res) => {
   try {
-    const formData = req.body;
-    console.log(formData);
+    const base64Image = req.file.buffer.toString("base64");
+    const meal = { ...req.body, img: `data:${req.file.mimetype};base64,${base64Image}` };
+    console.log(meal);
 
-    meals.push(formData);
+    meals.push(meal);
 
-    res.json({ success: "successfully created new meal", meal: formData });
+    res.json({ success: "successfully created new meal", meal: meal });
   } catch (error) {
     console.error("Error:", error);
     res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+app.delete("/meals/delete/:id", (req, res) => {
+  try {
+    const mealId = req.params.id;
+    const deletedIndex = meals.findIndex((meal) => meal.id == mealId);
+
+    if (deletedIndex !== -1) {
+      const deletedMeal = meals[deletedIndex];
+      meals.splice(deletedIndex, 1);
+      res.json({ success: true, meal: deletedMeal });
+    } else {
+      res.status(404).json({ message: "Couldn't find meal!" });
+    }
+  } catch (error) {
+    console.error("Error deleting meal!", error);
+    res.status(500).json({ message: "Error deleting meal!" });
   }
 });
 

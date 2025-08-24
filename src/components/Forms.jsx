@@ -1,16 +1,13 @@
 import { InputGroup, InputUploadGroupWithIcon, InputUploadGroup, TextAreaGroup } from "./Inputs";
 import SolidBtn from "./Buttons";
 import * as Yup from "yup";
-import { useState } from "react";
-
-//----------------------- FINISH COST, TIME AND UPLOAD -----------------------
+import { useRef, useState } from "react";
 
 export default function NewMealForm() {
-  const [errors, setErrors] = useState({});
-  const [formData, setFormData] = useState({
+  const initialFormData = {
     id: Date.now(),
     title: "",
-    img: "", // Need to change to {}
+    img: null,
     description: "",
     ingredients: [""],
     minsToCook: "",
@@ -19,7 +16,11 @@ export default function NewMealForm() {
     tags: [""],
     hasRecipe: "",
     steps: [""],
-  });
+  };
+
+  const imgRef = useRef();
+  const [errors, setErrors] = useState({});
+  const [formData, setFormData] = useState(initialFormData);
 
   function appendStep() {
     setFormData((prev) => ({
@@ -48,7 +49,7 @@ export default function NewMealForm() {
   async function checkData(formData) {
     const formSchema = Yup.object().shape({
       title: Yup.string().required("Name required"),
-      img: Yup.string().required("Image required"),
+      img: Yup.mixed().required("Image required"),
       description: Yup.string().required("Description required"),
       ingredients: Yup.array()
         .of(Yup.string())
@@ -71,7 +72,17 @@ export default function NewMealForm() {
       hasRecipe: Yup.string()
         .transform((value, originalValue) => (originalValue === "Please Select" || originalValue === "" ? undefined : value))
         .required("Answer required"),
-      steps: Yup.array().of(Yup.string().trim()),
+      steps: Yup.array()
+        .of(Yup.string())
+        .when("hasRecipe", {
+          is: "Yes",
+          then: (schema) =>
+            schema.test("at-least-one-non-empty", "You must provide at least one step", (value) => {
+              if (!value) return false;
+              return value.some((step) => step.trim() !== "");
+            }),
+          otherwise: (schema) => schema.notRequired(),
+        }),
     });
 
     try {
@@ -92,16 +103,23 @@ export default function NewMealForm() {
     if (!formCheck.valid) {
       console.log(formCheck.errors);
       setErrors(formCheck.errors);
-      return console.log("fill in form");
+      return alert("fill in form");
     } else {
       setErrors({});
+
+      const fd = new FormData();
+      Object.entries(formData).forEach(([key, value]) => {
+        if (Array.isArray(value)) {
+          value.forEach((v) => fd.append(key, v));
+        } else {
+          fd.append(key, value);
+        }
+      });
+
       try {
         const response = await fetch("http://localhost:3000/meals/new-meal", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json", // Need to remove the headers when replacing with FormData()
-          },
-          body: JSON.stringify(formData), // Need to use FormData() built in API instead to send image files
+          body: fd, // Need to use FormData() built in API instead to send image files
         });
 
         if (!response.ok) {
@@ -109,6 +127,11 @@ export default function NewMealForm() {
         }
 
         const data = await response.json();
+
+        alert(`${fd.get("title")} has been added to library!`);
+        setFormData({ ...initialFormData, id: Date.now() });
+        if (imgRef.current) imgRef.current.value = null;
+        setErrors({});
 
         console.log(data);
       } catch (error) {
@@ -128,7 +151,7 @@ export default function NewMealForm() {
           width={"lg:col-span-8 col-span-12"}
           id={"title"}
           placeholder={"Spaghetti Blognese"}
-          classtitle={errors.title ? "text-red-400" : ""}
+          className={errors.title ? "text-red-400" : ""}
           inputClass={errors.title ? "ring ring-2 ring-red-400 focus:ring-violet-400" : ""}
         />
         <InputUploadGroupWithIcon
@@ -138,6 +161,7 @@ export default function NewMealForm() {
           value={formData.img}
           labelClass={errors.img ? "text-red-400" : ""}
           className={errors.img ? "ring ring-2 ring-red-400 focus:ring-violet-400" : ""}
+          ref={imgRef}
         />
         <TextAreaGroup
           value={formData.description}
